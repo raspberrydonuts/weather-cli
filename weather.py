@@ -20,23 +20,35 @@ def main():
     #     print("Please input a location as an argument")
     #     print("Example: Minneapolis,US")
     #     exit()
-    country_matches = utils.countryInput()
-    country = ""
+    print("Please enter a country. e.g. United States")
+    country = input()
+    country_matches = utils.countryInput(country)
     country_code = ""
-    if len(country_matches) == 0:
-        country = country_matches[0]
+    while len(country_matches) == 0:
+        print("Could not find any countries close to what you're looking for. Please try again")
+        country = input()
+        country_matches = utils.countryInput(country)
+    if country == country_matches[0]:
         country_code = utils.getCountryCode(country)
-    while len(country_matches) > 0:
-        country = country_matches[0]
-        print("Did you mean " + country + "? y/n")
-        answer = input()
-        while answer != "y" or answer != "n":
-            print("Please enter y or n")
+    else:
+        while len(country_matches) > 0:
+            country = country_matches[0]
+            print("Did you mean " + country + "? y/n")
             answer = input()
-        if answer == "y":
-            country_code = utils.getCountryCode(country)
-        elif answer == "n":
-            country_matches = utils.countryInput()
+            while answer != "y" and answer != "n":
+                print("Please enter y or n")
+                answer = input()
+            if answer == "y":
+                country_code = utils.getCountryCode(country)
+                break
+            elif answer == "n":
+                print("Please enter a country. e.g. United States")
+                country = input()
+                country_matches = utils.countryInput(country)
+            if len(country_matches) == 0:
+                print("Could not find any countries close to what you're looking for. Please try again")
+                country = input()
+                country_matches = utils.countryInput(country)
 
     print("Please enter a city. e.g. Minneapolis")
     city = input()
@@ -49,11 +61,19 @@ def main():
     if response.status_code == 200:
         # x * 9/5 - 459.67
         response_json = response.json()
+        print("Enter f for farenheit or c for celsius")
+        unit = input()
         temperature_in_kelvin = response_json['main']['temp']
         temperature_in_farenheit = round((temperature_in_kelvin * 9/5 - 459.67), 2)
-        print("Current temperature in " + city + ", " + county +
-        " is " + str(temperature_in_farenheit) + "°F")
+        temperature_in_celsius = round(temperature_in_kelvin - 273.15, 2)
+        if unit == "f":
+            print("Current temperature in " + city +
+                " is " + str(temperature_in_farenheit) + "°F")
+        elif unit == "c":
+            print("Current temperature in " + city +
+                " is " + str(temperature_in_celsius) + "°C")
     else:
+        print(response)
         print("Error: Response status code not 200")
 
 

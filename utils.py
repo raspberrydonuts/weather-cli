@@ -9,9 +9,7 @@ def getClosestCountryMatch(country_name):
             name = country['name']
             countries.append(name)
     # search country.list.json for country, or closest to
-    print(country_name)
     close_matches = difflib.get_close_matches(country_name, countries)
-    print(close_matches)
     # return country code
     return close_matches
 
@@ -23,12 +21,15 @@ def getCountryCode(country_name):
                 return country['code']
     return ""
 
-def getCityId(city, country_code):
+def getCityId(city_name, country_code):
     # search city.list.json for a matching city with country code
+    with open('city.list.json', encoding="utf8") as json_file:
+        data = json.load(json_file)
+        for city in data:
+            if (city['name'] == city_name) and (city['country'] == country_code):
+                return city['id']
     # return id
     return 1
 
-def countryInput():
-    print("Please enter a country. e.g. United States")
-    country = input()
+def countryInput(country):
     return getClosestCountryMatch(country)
