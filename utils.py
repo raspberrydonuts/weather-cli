@@ -1,4 +1,4 @@
-
+from ascii import Ascii
 def countryInput():
     print("\nPlease enter a country. e.g. United States\n")
     country = input()
@@ -74,3 +74,16 @@ def printTemperature(response, city):
     elif unit == "c":
         print("\nCurrent temperature in " + city +
             " is " + str(temperature_in_celsius) + "°C")
+
+def parseWeather(response):
+    main = response.json()['weather'][0]['main']
+    description = response.json()['weather'][0]['description']
+    if main == "Clouds":
+        print(Ascii.cloud)
+    elif main == "Rain":
+        print(Ascii.rain)
+    elif main == "Clear":
+        print(Ascii.sun)
+    else:
+        print("This weather type is unaccounted for")
+    print(description)

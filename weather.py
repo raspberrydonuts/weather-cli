@@ -3,6 +3,7 @@ import requests
 import sys
 import utils
 from data import Data
+from ascii import Ascii
 
 # current weather or 5-days/3 hours forecast can be searched by
 # By city name
@@ -16,6 +17,12 @@ from data import Data
 # output: What city?
 # input: city
 # output: whtat country?
+
+
+#TODO: case insensitive for country and city lookup
+#TODO: get weather based off current location
+#TODO: What if multiple cities of same name in one country?
+
 def main():
     data = Data()
     country_code = utils.getCountryCode(data)
@@ -25,10 +32,11 @@ def main():
     url = "https://api.openweathermap.org/data/2.5/weather?id=%s&appid=%s" % (id, key)
     response = requests.get(url)
     if response.status_code == 200:
+        utils.parseWeather(response)
         utils.printTemperature(response, city)
     else:
         print(response)
-        print("Error: Response status code not 200")
+        print("Error: Response status code not 200, contact jaredlim320@gmail.com")
 
 
 if __name__ == "__main__":
